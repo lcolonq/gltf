@@ -83,6 +83,9 @@ pub struct Image<'a> {
 #[cfg_attr(docsrs, doc(cfg(feature = "import")))]
 #[derive(Clone, Debug)]
 pub struct Data {
+    /// The image itself.
+    pub image: image_crate::DynamicImage,
+
     /// The image pixel data (8 bits per channel).
     pub pixels: Vec<u8>,
 
@@ -173,8 +176,9 @@ impl Data {
             image => return Err(Error::UnsupportedImageFormat(image)),
         };
         let (width, height) = image.dimensions();
-        let pixels = image.into_bytes();
+        let pixels = image.clone().into_bytes();
         Ok(Data {
+            image,
             format,
             width,
             height,
